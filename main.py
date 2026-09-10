@@ -1,0 +1,37 @@
+# Imports
+from scripts.anarcii import process_sequence
+from scripts.helpers import read_json
+import pandas as pd
+import os
+
+spacer_string = "---------------------------------------------------------------"
+
+
+# Importing configuration
+print(spacer_string+"\n"+"> Importing paths from `config.json` file.")
+
+config = read_json()["settings"]
+dir_input, dir_output, file_input, file_output = config["dir_input"], config["dir_output"], config["file_input"], config["file_output"]
+seq_col = config["seq_col"]
+
+
+
+# Configuring paths of imports
+print(spacer_string+"\n"+f"> Loading input file ({file_input}) to python env.")
+
+path_input = os.path.join(dir_input, file_input)
+path_output = os.path.join(dir_output, file_output)
+
+# Loading input into memory
+df_input = pd.read_csv(path_input, index_col=0)
+df_input = df_input[seq_col]
+
+# Applying the function on input file
+print(spacer_string+"\n"+f"> Generating output results file.")
+
+cols = ['nt_og', 'seq_og', 'seq_anarcii', 'numbering', 'chain_type', 'score','query_start', 'query_end', 'error', 'scheme']
+anarcii = df_input.apply(process_sequence, anarcii=True, output_type="table")
+anarcii_df = pd.DataFrame(anarcii.tolist(), columns=cols, index=anarcii.index)
+anarcii_df.to_csv(path_output)
+
+print(spacer_string+"\n"+f"> output file saved as {path_output}.")

@@ -1,1 +1,4 @@
+.archive
 datasets/
+input/cleaned_seqs_all_seq.csv
+output/1k_test_output.csv
