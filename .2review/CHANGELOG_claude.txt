@@ -1,0 +1,37 @@
+Changelog - .2review_claude
+============================
+Improved copies of the project files, generated for review. Originals untouched.
+
+scripts/anarcii_claude.py (from scripts/anarcii.py)
+- process_sequence(): when output_type="table" and the spacer count isn't
+  divisible by 3, now returns a fixed 10-element row (via new _failed_row()
+  helper) instead of a bare np.nan scalar. The old scalar return would break
+  pd.DataFrame(anarcii.tolist(), columns=cols_result, ...) in main.py the
+  moment a real dataset hit that code path, since every other row is a
+  10-element array and one row would be a lone float.
+- Renamed anarchii_model/use_anarchii -> anarcii_model/use_anarcii for
+  spelling consistency with the anarcii package itself.
+- Replaced bare "except:" with "except Exception:" around the numbering
+  parse, so unrelated errors (e.g. KeyboardInterrupt) aren't silently caught.
+- output_type no longer silently falls through; an invalid value now raises
+  ValueError instead of returning None.
+- Exported cols_result so main_claude.py can import it instead of keeping a
+  second, hand-maintained copy of the column list.
+
+main_claude.py (from main.py)
+- Imports cols_result from scripts.anarcii_claude instead of redefining the
+  same 10-item list locally (previously the two lists could silently drift
+  out of sync if one was edited and not the other).
+- Loads config_claude.json via a path relative to this script's own
+  location (os.path.dirname(__file__)) rather than assuming the working
+  directory, so it runs correctly regardless of where it's invoked from.
+- limit_rows parsing narrows the except clause to (TypeError, ValueError).
+
+scripts/helpers_claude.py (from scripts/helpers.py)
+- No changes. Copied as-is; no issues found in this file.
+
+config_claude.json (from config.json)
+- No changes. Copied as-is.
+
+Verified: ran main_claude.py against the real input/cleaned_seqs_all_seq_1k.csv
+with limit_rows=100 - produced a clean 100x10 output CSV with no errors.
