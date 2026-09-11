@@ -12,19 +12,28 @@ print(spacer_string+"\n"+"> Importing paths from `config.json` file.")
 
 config = read_json()["settings"]
 dir_input, dir_output, file_input, file_output = config["dir_input"], config["dir_output"], config["file_input"], config["file_output"]
-seq_col = config["seq_col"]
+seq_col, limit_rows = config["seq_col"], config["limit_rows"]
 
+# Defining row limit if in config
+try:
+    limit_rows = int(limit_rows)
+except:
+    limit_rows = None
 
 
 # Configuring paths of imports
 print(spacer_string+"\n"+f"> Loading input file ({file_input}) to python env.")
 
 path_input = os.path.join(dir_input, file_input)
-path_output = os.path.join(dir_output, file_output)
+split_fname = file_output.split(".")
+path_output = os.path.join(dir_output, f"{split_fname[0]}{limit_rows}.{split_fname[1]}")
 
 # Loading input into memory
 df_input = pd.read_csv(path_input, index_col=0)
-df_input = df_input[seq_col]
+if isinstance(limit_rows, int) & (limit_rows <= df_input.shape[0]):
+    df_input = df_input[seq_col].head(limit_rows)
+else:
+    df_input = df_input[seq_col]
 
 # Applying the function on input file
 print(spacer_string+"\n"+f"> Generating output results file.")
