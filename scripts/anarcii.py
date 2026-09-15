@@ -19,8 +19,6 @@ def use_anarchii(nt_seqs: str,
     model: str -> Which model of the anarcii algorithm to use (see doc for other options).
     """
     
-    # Select the type of sequence (antibody, tcr, shark or unknown) and instantiate the model. 
-    #model = Anarcii(seq_type="antibody")
 
     # Call the number method on a list of sequences, path to a fasta or PDB file.
     results = model.number(nt_seqs)
