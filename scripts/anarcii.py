@@ -1,6 +1,7 @@
 # Imports
-from scripts.helpers import translateNT
+from anarcii.output_data_processing import imgt_order, numbered_sequence_dict, required_residue_numbers
 from anarcii import Anarcii # https://github.com/oxpig/ANARCII (! pip install anarcii)
+from scripts.helpers import translateNT
 import pandas as pd
 import numpy as np
 
@@ -31,6 +32,7 @@ def use_anarchii(nt_seqs: str,
 cols_result = ['nt_og', 'seq_og', 'seq_anarcii', 'numbering', 'chain_type', 'score','query_start', 'query_end', 'error', 'scheme']
 
 def process_sequence(seq: str,
+                     append_cdr3: tuple = (True, "cdr3_aa"),
                      anarcii: bool = True,
                      output_type: str = "str",
                      remove_x:bool = True) -> str:
@@ -88,3 +90,22 @@ def process_sequence(seq: str,
                 
                 return df_results.values[0]
                 #return {i:j for i,j in zip(cols_result, df_results.values)}
+
+
+##########################################################
+def aligned_frame(numbered_results: dict) -> pd.DataFrame:
+    """
+    Reindex ANARCII numbering results onto a shared IMGT position set so every
+    sequence gets the same-length alignment, with '-' for unused CDR3 insertions.
+    numbered_results: dict -> ANARCII model output from `Anarcii.number()`.
+    """
+     
+    residue_numbers = set(required_residue_numbers)
+    rows = {}
+    for name, result in numbered_results.items():
+        numbering = result["numbering"] or []
+        residue_numbers.update(num for num, _ in numbering)
+        rows[name] = numbered_sequence_dict(numbering)
+
+    columns = [str(num) + ins.strip() for num, ins in imgt_order(residue_numbers)]
+    return pd.DataFrame.from_dict(rows, orient="index", columns=columns).fillna("-")

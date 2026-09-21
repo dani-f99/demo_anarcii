@@ -39,20 +39,26 @@ def read_json(path:str = "config.json") -> dict:
 
 
 ################################
-def translateNT(seq:str) -> str:
+def translateNT(seq:str,
+                aa_start:int = 1,
+                aa_end:int = -1) -> str:
     """
     Helper function that translate NT DNA sequence to AA sequence.
     seq:str -> string of AA sequence to be translated.
     """
 
     # Getting correct aa length for translation
-    len_seq = len(seq)
+    if aa_end == -1:
+        aa_end = len(seq)
+
+    nt_sequence = seq[aa_start*3 -3 : aa_end*3]
+    len_seq = len(nt_sequence)
     len_aa = int((len_seq - len_seq % 3) / 3)
     translated = []
 
     # Translating sequence
     for i in range(1, len_aa + 1):
-        codon = seq[i*3-3:i*3]
+        codon = nt_sequence[i*3-3:i*3]
 
         if codon in list(codon_dict.keys()):
             aa = codon_dict[codon] 
