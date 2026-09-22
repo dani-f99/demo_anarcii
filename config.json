@@ -1,8 +1,11 @@
-{"settings":{"dir_input":"input",
+{"settings":{"run_name":"test_anarcii",
+             "dir_input":"input",
              "dir_output":"output",
              "file_input":"cleaned_seqs_all_seq_1k.csv",
              "file_output":"1k_test_output_demo.csv",
              "seq_col":"sequence",
-             "limit_rows":"100"
-             }
-        }
+             "limit_rows":"100"},
+
+ "AssignCDR3":{"germline_column":"germline",
+               "sequence_column":"sequence",
+               "cdr3_column":"cdr3_aa"}}
