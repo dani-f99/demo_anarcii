@@ -1,4 +1,5 @@
 datasets/
 results
+results
 input/cleaned_seqs_all_seq.csv
 scripts/__pycache__
