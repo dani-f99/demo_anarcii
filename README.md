@@ -1,4 +1,4 @@
-# demo_anarcii
+# anarcii_cdr3
 
 Translates raw nucleotide antibody sequences to amino acids and numbers them with [ANARCII](https://github.com/oxpig/ANARCII) using the IMGT scheme, then implants the AnarcII-aligned CDR3 back into the original table.
 
