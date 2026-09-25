@@ -1,7 +1,7 @@
 {"settings":{"run_name":"test_anarcii",
              "dir_input":"input",
              "dir_output":"output",
-             "file_input":"cleaned_seqs_all_seq_1k.csv",
+             "file_input":"covid_vaccine_new.sequences.txt",
              "file_output":"1k_test_output_demo.csv",
              "seq_col":"sequence",
              "limit_rows":"100"},

@@ -26,7 +26,15 @@ if __name__ == "__main__":
     # Initiating the AnarcII class
     write_report(output_dir, "Loading data into the AnarcII algorithm.", overwrite=False)
     print(spacer,"\n> Initiating AnarcII class")
-    aclass = AssignCDR3(pd.read_csv(input_file, index_col=0),
+
+    input_file_type = input_file.split(".")[-1]
+    if input_file_type == "csv":
+        input_df = pd.read_csv(input_file, index_col=0)
+
+    elif input_file_type == "txt":
+        input_df = pd.read_csv(input_file, sep="\t")
+
+    aclass = AssignCDR3(input_df,
                         germline_column=germline_col, 
                         seq_column=sequence_col,
                         results_path=output_dir)
